@@ -1,7 +1,35 @@
 import React, { useReducer } from "react";
 
+const types = {
+  increment: "increment",
+  decrement: "decrement",
+  reset: "reset",
+};
+
 const reducer = (state, action) => {
-  return state;
+  // if (action.type === "increment") {
+  //   return state + 1;
+  // }
+  // if (action.type === "decrement") {
+  //   return state - 1;
+  // }
+  // if (action.type === "reset") {
+  //   return 0;
+  // }
+
+  // return state;
+
+  switch (action.type) {
+    case types.increment:
+      return state + 1;
+    case types.decrement:
+      return state - 1;
+    case types.reset:
+      return 0;
+
+    default:
+      return state;
+  }
 };
 
 const CounterApp = () => {
@@ -10,9 +38,13 @@ const CounterApp = () => {
   return (
     <div>
       <h2>Clicks {counter}</h2>
-      <button>Increment</button>
-      <button>Decrement</button>
-      <button>Reset</button>
+      <button onClick={() => dispatch({ type: types.increment })}>
+        Increment
+      </button>
+      <button onClick={() => dispatch({ type: types.decrement })}>
+        Decrement
+      </button>
+      <button onClick={() => dispatch({ type: types.reset })}>Reset</button>
     </div>
   );
 };
