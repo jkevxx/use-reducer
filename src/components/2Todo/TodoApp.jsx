@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 
 const types = {
   add: "add",
@@ -16,6 +16,14 @@ const reducer = (state, action) => {
     case types.delete:
       return state.filter((todo) => todo.id !== action.payload);
 
+    case types.add:
+      return [...state, action.payload];
+
+    case types.update: {
+      const todoEdit = action.payload;
+
+      return state.map((todo) => (todo.id === todoEdit.id ? todoEdit : todo));
+    }
     default:
       return state;
   }
@@ -23,6 +31,13 @@ const reducer = (state, action) => {
 
 const TodoApp = () => {
   const [todos, dispatch] = useReducer(reducer, initialTodos);
+  const [text, setText] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newTodo = { id: Date.now(), title: text };
+    dispatch({ type: types.add, payload: newTodo });
+  };
 
   return (
     <div>
@@ -41,9 +56,27 @@ const TodoApp = () => {
             >
               Delete
             </button>
+            <button
+              onClick={() => {
+                dispatch({
+                  type: types.update,
+                  payload: { ...todo, title: text },
+                });
+              }}
+            >
+              Update
+            </button>
           </li>
         ))}
       </ul>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Todo"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      </form>
     </div>
   );
 };
